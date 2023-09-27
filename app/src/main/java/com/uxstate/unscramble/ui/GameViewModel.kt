@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.uxstate.unscramble.data.allWords
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class GameViewModel: ViewModel() {
 
@@ -44,7 +45,10 @@ private fun pickRandomWordAndShuffle():String {
 
         return String(tempWord)
     }
+
+    fun resetGame(){
+
+        _uiState.update { it.copy(currentScrambledWord = pickRandomWordAndShuffle()) }
+    }
 }
 
-
-}
