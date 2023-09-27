@@ -22,7 +22,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.unscramble"
+    namespace = "com.uxstate.unscramble"
     compileSdk = 34
 
     defaultConfig {

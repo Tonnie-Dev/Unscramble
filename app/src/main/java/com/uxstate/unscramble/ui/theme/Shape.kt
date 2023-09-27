@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.unscramble.ui.theme
+package com.uxstate.unscramble.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes

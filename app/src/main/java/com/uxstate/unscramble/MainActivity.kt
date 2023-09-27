@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.unscramble
+package com.uxstate.unscramble
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -23,8 +23,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.unscramble.ui.GameScreen
-import com.example.unscramble.ui.theme.UnscrambleTheme
+import com.uxstate.unscramble.ui.GameScreen
+import com.uxstate.unscramble.ui.theme.UnscrambleTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

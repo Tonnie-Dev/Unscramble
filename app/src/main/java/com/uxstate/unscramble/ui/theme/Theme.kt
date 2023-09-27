@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.unscramble.ui.theme
+package com.uxstate.unscramble.ui.theme
 
 import android.app.Activity
 import android.os.Build

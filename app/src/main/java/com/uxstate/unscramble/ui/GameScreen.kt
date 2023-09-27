@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.unscramble.ui
+package com.uxstate.unscramble.ui
 
 import android.app.Activity
 import androidx.compose.foundation.background
@@ -50,8 +50,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.unscramble.R
-import com.example.unscramble.ui.theme.UnscrambleTheme
+import com.uxstate.unscramble.R
+import com.uxstate.unscramble.ui.theme.UnscrambleTheme
 
 @Composable
 fun GameScreen() {
