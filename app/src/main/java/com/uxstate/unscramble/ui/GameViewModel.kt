@@ -16,6 +16,10 @@ class GameViewModel: ViewModel() {
 private lateinit var currentWord:String
 private var usedWords:MutableSet<String> = mutableSetOf()
 
+
+    init {
+        resetGame()
+    }
 private fun pickRandomWordAndShuffle():String {
     currentWord = allWords.random()
 
