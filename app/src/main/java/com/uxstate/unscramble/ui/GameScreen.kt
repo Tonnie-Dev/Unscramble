@@ -51,12 +51,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.uxstate.unscramble.R
+import com.uxstate.unscramble.ui.theme.LocalSpacing
 import com.uxstate.unscramble.ui.theme.UnscrambleTheme
 
 @Composable
 fun GameScreen() {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
-
+ val spacing = LocalSpacing.current
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -105,19 +106,20 @@ fun GameScreen() {
             }
         }
 
-        GameStatus(score = 0, modifier = Modifier.padding(20.dp))
+        GameStatus(score = 0, modifier = Modifier.padding(spacing.spaceMedium+spacing.spaceExtraSmall))
     }
 }
 
 @Composable
 fun GameStatus(score: Int, modifier: Modifier = Modifier) {
+    val spacing = LocalSpacing.current
     Card(
         modifier = modifier
     ) {
         Text(
             text = stringResource(R.string.score, score),
             style = typography.headlineMedium,
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(spacing.spaceSmall)
         )
     }
 }
@@ -125,7 +127,7 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 @Composable
 fun GameLayout(modifier: Modifier = Modifier) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
-
+    val spacing = LocalSpacing.current
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
@@ -139,7 +141,7 @@ fun GameLayout(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .clip(shapes.medium)
                     .background(colorScheme.surfaceTint)
-                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                    .padding(horizontal = spacing.spaceSmall + spacing.spaceDoubleDp, vertical = spacing.spaceExtraSmall)
                     .align(alignment = Alignment.End),
                 text = stringResource(R.string.word_count, 0),
                 style = typography.titleMedium,
