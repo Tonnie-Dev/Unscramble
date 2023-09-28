@@ -39,6 +39,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,58 +57,68 @@ import com.uxstate.unscramble.ui.theme.LocalSpacing
 import com.uxstate.unscramble.ui.theme.UnscrambleTheme
 
 @Composable
-fun GameScreen() {
+fun GameScreen(viewModel: GameViewModel) {
+
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
- val spacing = LocalSpacing.current
+    val spacing = LocalSpacing.current
+    val gameUiState by viewModel.uiState.collectAsState()
+
     Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(mediumPadding),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(mediumPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Text(
-            text = stringResource(R.string.app_name),
-            style = typography.titleLarge,
+                text = stringResource(R.string.app_name),
+                style = typography.titleLarge,
         )
 
         GameLayout(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(mediumPadding)
+                currentScrambledWord = gameUiState.currentScrambledWord,
+                onKeyboardDone = {},
+                onUserGuessChanged = {  viewModel.updateUserGuess(it) },
+                userGuess = viewModel.userGuess,
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(mediumPadding)
         )
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(mediumPadding),
-            verticalArrangement = Arrangement.spacedBy(mediumPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(mediumPadding),
+                verticalArrangement = Arrangement.spacedBy(mediumPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { }
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { }
             ) {
                 Text(
-                    text = stringResource(R.string.submit),
-                    fontSize = 16.sp
+                        text = stringResource(R.string.submit),
+                        fontSize = 16.sp
                 )
             }
 
             OutlinedButton(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth()
+                    onClick = { },
+                    modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(R.string.skip),
-                    fontSize = 16.sp
+                        text = stringResource(R.string.skip),
+                        fontSize = 16.sp
                 )
             }
         }
 
-        GameStatus(score = 0, modifier = Modifier.padding(spacing.spaceMedium+spacing.spaceExtraSmall))
+        GameStatus(
+                score = 0,
+                modifier = Modifier.padding(spacing.spaceMedium + spacing.spaceExtraSmall)
+        )
     }
 }
 
@@ -114,67 +126,76 @@ fun GameScreen() {
 fun GameStatus(score: Int, modifier: Modifier = Modifier) {
     val spacing = LocalSpacing.current
     Card(
-        modifier = modifier
+            modifier = modifier
     ) {
         Text(
-            text = stringResource(R.string.score, score),
-            style = typography.headlineMedium,
-            modifier = Modifier.padding(spacing.spaceSmall)
+                text = stringResource(R.string.score, score),
+                style = typography.headlineMedium,
+                modifier = Modifier.padding(spacing.spaceSmall)
         )
     }
 }
 
 @Composable
-fun GameLayout(modifier: Modifier = Modifier) {
+fun GameLayout(
+    modifier: Modifier = Modifier,
+    currentScrambledWord: String,
+    userGuess:String,
+    onUserGuessChanged: (text: String) -> Unit,
+    onKeyboardDone: () -> Unit
+) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val spacing = LocalSpacing.current
     Card(
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+            modifier = modifier,
+            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(mediumPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(mediumPadding)
+                verticalArrangement = Arrangement.spacedBy(mediumPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(mediumPadding)
         ) {
             Text(
-                modifier = Modifier
-                    .clip(shapes.medium)
-                    .background(colorScheme.surfaceTint)
-                    .padding(horizontal = spacing.spaceSmall + spacing.spaceDoubleDp, vertical = spacing.spaceExtraSmall)
-                    .align(alignment = Alignment.End),
-                text = stringResource(R.string.word_count, 0),
-                style = typography.titleMedium,
-                color = colorScheme.onPrimary
+                    modifier = Modifier
+                            .clip(shapes.medium)
+                            .background(colorScheme.surfaceTint)
+                            .padding(
+                                    horizontal = spacing.spaceSmall + spacing.spaceDoubleDp,
+                                    vertical = spacing.spaceExtraSmall
+                            )
+                            .align(alignment = Alignment.End),
+                    text = stringResource(R.string.word_count, 0),
+                    style = typography.titleMedium,
+                    color = colorScheme.onPrimary
             )
             Text(
-                text = "scrambleun",
-                style = typography.displayMedium
+                    text = currentScrambledWord,
+                    style = typography.displayMedium
             )
             Text(
-                text = stringResource(R.string.instructions),
-                textAlign = TextAlign.Center,
-                style = typography.titleMedium
+                    text = stringResource(R.string.instructions),
+                    textAlign = TextAlign.Center,
+                    style = typography.titleMedium
             )
             OutlinedTextField(
-                value = "",
-                singleLine = true,
-                shape = shapes.large,
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = colorScheme.surface,
-                    unfocusedContainerColor = colorScheme.surface,
-                    disabledContainerColor = colorScheme.surface,
-                ),
-                onValueChange = { },
-                label = { Text(stringResource(R.string.enter_your_word)) },
-                isError = false,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = { }
-                )
+                    value = userGuess,
+                    singleLine = true,
+                    shape = shapes.large,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                            focusedContainerColor = colorScheme.surface,
+                            unfocusedContainerColor = colorScheme.surface,
+                            disabledContainerColor = colorScheme.surface,
+                    ),
+                    onValueChange = onUserGuessChanged,
+                    label = { Text(stringResource(R.string.enter_your_word)) },
+                    isError = false,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                            onDone = { onKeyboardDone() }
+                    )
             )
         }
     }
@@ -192,28 +213,28 @@ private fun FinalScoreDialog(
     val activity = (LocalContext.current as Activity)
 
     AlertDialog(
-        onDismissRequest = {
-            // Dismiss the dialog when the user clicks outside the dialog or on the back
-            // button. If you want to disable that functionality, simply use an empty
-            // onCloseRequest.
-        },
-        title = { Text(text = stringResource(R.string.congratulations)) },
-        text = { Text(text = stringResource(R.string.you_scored, score)) },
-        modifier = modifier,
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    activity.finish()
+            onDismissRequest = {
+                // Dismiss the dialog when the user clicks outside the dialog or on the back
+                // button. If you want to disable that functionality, simply use an empty
+                // onCloseRequest.
+            },
+            title = { Text(text = stringResource(R.string.congratulations)) },
+            text = { Text(text = stringResource(R.string.you_scored, score)) },
+            modifier = modifier,
+            dismissButton = {
+                TextButton(
+                        onClick = {
+                            activity.finish()
+                        }
+                ) {
+                    Text(text = stringResource(R.string.exit))
                 }
-            ) {
-                Text(text = stringResource(R.string.exit))
+            },
+            confirmButton = {
+                TextButton(onClick = onPlayAgain) {
+                    Text(text = stringResource(R.string.play_again))
+                }
             }
-        },
-        confirmButton = {
-            TextButton(onClick = onPlayAgain) {
-                Text(text = stringResource(R.string.play_again))
-            }
-        }
     )
 }
 
@@ -221,6 +242,6 @@ private fun FinalScoreDialog(
 @Composable
 fun GameScreenPreview() {
     UnscrambleTheme {
-        GameScreen()
+        //GameScreen()
     }
 }
