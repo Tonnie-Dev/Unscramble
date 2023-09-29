@@ -61,7 +61,7 @@ fun GameScreen(viewModel: GameViewModel) {
 
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val spacing = LocalSpacing.current
-    val gameUiState by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
     Column(
             modifier = Modifier
@@ -77,11 +77,12 @@ fun GameScreen(viewModel: GameViewModel) {
         )
 
         GameLayout(
-                currentScrambledWord = gameUiState.currentScrambledWord,
+                currentScrambledWord = state.currentScrambledWord,
                 onKeyboardDone = {},
                 onUserGuessChanged = { viewModel.updateUserGuess(it) },
                 userGuess = viewModel.userGuess,
-                isGuessWrong = gameUiState.isGuessedWordWrong,
+                isGuessWrong = state.isGuessedWordWrong,
+                wordCount = state.currentWordCount,
                 modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
@@ -106,7 +107,7 @@ fun GameScreen(viewModel: GameViewModel) {
             }
 
             OutlinedButton(
-                    onClick = {},
+                    onClick = viewModel::skipWord,
                     modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -117,7 +118,7 @@ fun GameScreen(viewModel: GameViewModel) {
         }
 
         GameStatus(
-                score = 0,
+                score = state.score,
                 modifier = Modifier.padding(spacing.spaceMedium + spacing.spaceExtraSmall)
         )
     }
@@ -143,6 +144,7 @@ fun GameLayout(
     currentScrambledWord: String,
     userGuess: String,
     isGuessWrong: Boolean,
+    wordCount:Int,
     onUserGuessChanged: (text: String) -> Unit,
     onKeyboardDone: () -> Unit
 ) {
@@ -166,7 +168,7 @@ fun GameLayout(
                                     vertical = spacing.spaceExtraSmall
                             )
                             .align(alignment = Alignment.End),
-                    text = stringResource(R.string.word_count, 0),
+                    text = stringResource(R.string.word_count, wordCount),
                     style = typography.titleMedium,
                     color = colorScheme.onPrimary
             )
