@@ -117,6 +117,11 @@ fun GameScreen(viewModel: GameViewModel) {
             }
         }
 
+
+        if (state.isGameOver){
+
+            FinalScoreDialog(score = state.score, onPlayAgain = viewModel::resetGame)
+        }
         GameStatus(
                 score = state.score,
                 modifier = Modifier.padding(spacing.spaceMedium + spacing.spaceExtraSmall)
@@ -171,10 +176,10 @@ fun GameLayout(
                     text = stringResource(R.string.word_count, wordCount),
                     style = typography.titleMedium,
                     color = colorScheme.onPrimary
-            )
-            Text(
-                    text = currentScrambledWord,
-                    style = typography.displayMedium
+    )
+    Text(
+            text = currentScrambledWord,
+                       style = typography.displayMedium
             )
             Text(
                     text = stringResource(R.string.instructions),
